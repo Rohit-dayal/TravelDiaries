@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
+import userRoutes from './routes/user.route.js'
+// We created index.js file because in package.json the main file is mentioned as index.js
 
 dotenv.config();
 mongoose.connect(
@@ -17,3 +19,5 @@ const app = express();
 app.listen(3000,() => {
     console.log('server is running on port 3000 !!')
 })
+
+app.use('/api/user',userRoutes)
