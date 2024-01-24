@@ -7,6 +7,8 @@ import SignUp from './Pages/SignUp'
 import Dashboard from './Pages/Dashboard'
 import Home from './Pages/Home'
 import Header from './components/Header'
+import FooterCom from './components/FooterCom'
+
 
 
 export default function App() {
@@ -21,6 +23,7 @@ export default function App() {
         <Route path='/dashboard' element={<Dashboard/>}></Route>
         <Route path='/projects' element={<Projects/>}></Route>
       </Routes>
+      <FooterCom/>
     </BrowserRouter>
   )
 }
