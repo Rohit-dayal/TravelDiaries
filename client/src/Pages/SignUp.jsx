@@ -2,6 +2,7 @@ import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import React from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { useState } from "react";
+import OAuth from "../components/OAuth";
 
 export default function SignUp() {
   // Setting initial stage of the form data with useState
@@ -81,6 +82,7 @@ export default function SignUp() {
               {loading ? (
               <><Spinner size='sm'/><span className="pl-3"> Loading...</span></>): ('Sign Up' )}
             </Button>
+            <OAuth/>
           </form>
           <div className=" flex pt-2 gap-2 text-sm">
             <span> Have an account?</span>

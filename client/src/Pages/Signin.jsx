@@ -4,6 +4,7 @@ import { Link,useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { signInFailure,signInStart,signInSuccess } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 export default function SignIn() {
   // Setting initial stage of the form data with useState
@@ -23,7 +24,7 @@ export default function SignIn() {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
   // As we know both backend and frontend are working at different ports.
-  // So we use the proxy to shift he target refer to the code in vite.condig.js file
+  // So we use the proxy to shift the target refer to the code in vite.condig.js file
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(!formData.email || !formData.password){
@@ -88,15 +89,16 @@ export default function SignIn() {
             </div>
             <Button gradientDuoTone="purpleToBlue" type="submit" disabled={loading}>
               {loading ? (
-              <><Spinner size='sm'/><span className="pl-3"> Loading...</span></>): ('Sign Up' )}
+              <><Spinner size='sm'/><span className="pl-3"> Loading...</span></>): ('Sign In')}
             </Button>
+            <OAuth/>
           </form>
           <div className=" flex pt-2 gap-2 text-sm">
             <span>Dont't have an account?</span>
             <Link to="/sign-up" className="text-blue-500">
               SignUp
             </Link>
-          </div>
+         </div>
           <div>
             {errorMessage && (<Alert className="mt-3" color='failure'>
               {errorMessage}
