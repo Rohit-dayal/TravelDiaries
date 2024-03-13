@@ -1,11 +1,15 @@
-import { Button, Navbar, TextInput } from 'flowbite-react'
+import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
 import React from 'react'
 import { Link,useLocation } from 'react-router-dom'
 import {AiOutlineSearch} from 'react-icons/ai'
 import {FaMoon }from 'react-icons/fa'
+import { useSelector } from 'react-redux'
+//useSelector helps to find to out weather the any user logged in or not.
+
 
 export default function Header() {
     const path = useLocation().pathname;
+    const {currentUser} = useSelector(state => state.user);
   return (
     // class elements are from taliwindcss and flowbite react hover on any class to get their functionality
     <Navbar className='border-b-2'>
@@ -29,11 +33,34 @@ export default function Header() {
             <Button className='w-12 h-10 hidden sm:inline' color='gray' pill>
                 <FaMoon/>
             </Button>
-            <Link to='/sign-in'>
+            {currentUser ? (
+                <Dropdown
+                    // Setting all the properties how dropdown will looks like
+                    arrowIcon = {false}
+                    inline
+                    label={<Avatar
+                       alt='user'
+                       img={currentUser.profilePicture}
+                       rounded
+                    />}
+                    >
+                      <Dropdown.Header>
+                        <span className='block text-sm'>@{currentUser.username}</span>
+                        <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
+                      </Dropdown.Header>  
+                      <Link to={'/dashboard?tab=profile'}>
+                        <Dropdown.Item>profile</Dropdown.Item>
+                      </Link>
+                      <Dropdown.Divider/>
+                      <Dropdown.Item>Sign out</Dropdown.Item>
+                </Dropdown>
+            ):
+            (<Link to='/sign-in'>
             <Button outline gradientDuoTone="purpleToBlue">
                 Sign In
             </Button>
-            </Link>
+            </Link>)
+            }
             <Navbar.Toggle/>
         </div>
         <Navbar.Collapse className='self-center whitespace-nowrap text-sm sm:text-l font-semibold dark:text-white' >
