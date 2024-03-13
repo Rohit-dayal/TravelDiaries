@@ -1,0 +1,35 @@
+import React, { useEffect, useState } from 'react';
+import { Sidebar } from 'flowbite-react'
+import { HiUser, HiArrowSmRight } from 'react-icons/hi'
+import { Link, useLocation } from 'react-router-dom';
+
+export default function DashSidebar() {
+    const location = useLocation();
+    // For accessing the different tabs in dashboard like profile.
+    const [tab, setTab] = useState(' ');
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const tabFromUrl = urlParams.get('tab'); // get the tab mentioned in url
+        // console.log(tabFromUrl)
+        if (tabFromUrl) {
+            setTab(tabFromUrl);
+        }
+    }), [location.search] // And if any time location.search changes useEffect code will again run(render)
+    return (
+        <Sidebar className='w-full md:w-56'>
+            <Sidebar.Items>
+                <Sidebar.ItemGroup>
+                    <Link to='/dashboard?tab=profile'>
+                        {/* Only make the profile active when we are on that tab */}
+                        <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelColor='dark'>
+                            Profile
+                        </Sidebar.Item>
+                    </Link>
+                    <Sidebar.Item icon={HiArrowSmRight} >
+                        Sign Out
+                    </Sidebar.Item>
+                </Sidebar.ItemGroup>
+            </Sidebar.Items>
+        </Sidebar>
+    )
+}
