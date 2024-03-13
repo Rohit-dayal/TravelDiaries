@@ -3,9 +3,11 @@ import userReducer from './user/userSlice'
 import storage from 'redux-persist/lib/storage'
 import {persistReducer} from 'redux-persist'
 import persistStore from 'redux-persist/es/persistStore'
+import themeReducer from './theme/themeSlice'
 
 const rootReducer = combineReducers({
-    user: userReducer,
+    user: userReducer, // We use the userReducer because we imported it by this name
+    theme: themeReducer,
 })
 
 const persistConfig = {
@@ -13,7 +15,7 @@ const persistConfig = {
     storage,
     version: 1,
 }
-// with help of persist we are able to sotre the information of user in localstorage.
+// with help of persist we are able to store the information of user in localstorage.
 // So that even after reloading the page we still have the information of user
 const persistedReducer = persistReducer(persistConfig,rootReducer);
 
