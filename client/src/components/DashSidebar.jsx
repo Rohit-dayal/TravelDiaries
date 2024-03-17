@@ -21,8 +21,9 @@ export default function DashSidebar() {
                 <Sidebar.ItemGroup>
                     <Link to='/dashboard?tab=profile'>
                         {/* Only make the profile active when we are on that tab */}
-                        <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelColor='dark'>
-                            Profile
+                        <Sidebar.Item active={tab === 'profile'} icon={HiUser} label={'User'} labelColor='dark'
+                        as = "div" >{/* We can not make anchor tag inside an another anchor tag which Link here so that's way we saved it as button */}
+                          Profile  
                         </Sidebar.Item>
                     </Link>
                     <Sidebar.Item icon={HiArrowSmRight} >
