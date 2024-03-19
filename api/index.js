@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
 // We created index.js file because in package.json the main file is mentioned as index.js
+import cookieParser from 'cookie-parser'; // for this we installed a package name npm i cookie-parser
 
 dotenv.config();
 mongoose.connect(
@@ -19,6 +20,7 @@ const app = express();
 // As a default we are not allowed to send the json to the backend so we need to use the below line. 
 //This will allow the json as a input to the backend
 app.use(express.json());
+app.use(cookieParser()); // So by this way we can get a cookie from a browser 
 
 app.listen(3000,() => {
     console.log('server is running on port 3000 !!')
