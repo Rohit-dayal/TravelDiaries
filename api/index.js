@@ -5,6 +5,7 @@ import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
 // We created index.js file because in package.json the main file is mentioned as index.js
 import cookieParser from 'cookie-parser'; // for this we installed a package name npm i cookie-parser
+import postRoutes from './routes/post.route.js'
 
 dotenv.config();
 mongoose.connect(
@@ -28,6 +29,7 @@ app.listen(3000,() => {
 
 app.use('/api/user',userRoutes)
 app.use('/api/auth',authRoutes)
+app.use('/api/post',postRoutes)
 
 // This is the middleware we use it to get rid of from rewritting the same code multiple times 
 app.use((err,req,res,next) => {
