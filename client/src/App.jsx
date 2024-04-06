@@ -9,6 +9,8 @@ import Home from './Pages/Home'
 import Header from './components/Header'
 import FooterCom from './components/FooterCom'
 import PrivateRoute from './components/PrivateRoute'
+import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute'
+import CreatePost from './Pages/Createpost'
 
 
 
@@ -24,6 +26,10 @@ export default function App() {
         <Route element = {<PrivateRoute/>}>
           {/* To make the dashboard private put it inside the private route so that anyone can access it only when he is logged in */}
           <Route path='/dashboard' element={<Dashboard/>}></Route>
+        </Route>
+        <Route element = {<OnlyAdminPrivateRoute/>}>
+          {/* It has the elements which only admin has the access */}
+          <Route path='/create-post' element={<CreatePost/>}></Route>
         </Route>
         <Route path='/projects' element={<Projects/>}></Route>
       </Routes>
