@@ -1,9 +1,61 @@
-import { Button, FileInput, Select, TextInput } from "flowbite-react";
-import React from "react";
+import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase.js";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const CreatePost = () => {
+  const [file, setFile] = useState(null);
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
+  const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  // the below function is uploading the image on firebase
+  const handleUploadImage = async () => {
+    try {
+      if (!file) {
+        setImageFileUploadError("please select an image");
+        return;
+      }
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + "-" + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed", // Doing this we have a snapshot of a image at every single time
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setImageFileUploadProgress(progress.toFixed(0));
+        },
+        (error) => {
+          setImageFileUploadError(
+            "Could not upload an image(file must be less than 2MB"
+          );
+          setImageFileUploadProgress(null);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+            setImageFileUploadProgress(null);
+            setImageFileUploadError(null);
+            setFormData({ ...formData, image: downloadUrl });
+          });
+        }
+      );
+    } catch (error) {
+      setImageFileUploadError("Image upload failed");
+      setImageFileUploadProgress(null);
+    }
+  };
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center rext-3xl my-7 font-semibold">Create a post</h1>
@@ -24,11 +76,46 @@ const CreatePost = () => {
           </Select>
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-          <FileInput type="file" accept="image/*" />
-          <Button type="button" gradientDuoTone="purpleToBlue" size="sm">
-            Upload image
+          <FileInput
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+          />{" "}
+          {/* [0] is for selecting the first image only */}
+          <Button
+            type="button"
+            gradientDuoTone="purpleToBlue"
+            outline
+            size="sm"
+            onClick={handleUploadImage}
+            disabled={imageFileUploadProgress}
+          >
+            {/* If we are uploading the image then this below code will show us the circular progress bar */}
+            {imageFileUploadProgress ? (
+              <div className="w-16 h-16">
+                <CircularProgressbar
+                  value={imageFileUploadProgress}
+                  text={`${imageFileUploadProgress || 0}%`}
+                />
+              </div>
+            ) : (
+              "Upload image"
+            )}
           </Button>
         </div>
+        {imageFileUploadError && (
+          <Alert color='failure'>
+            {imageFileUploadError}
+          </Alert>
+        )}
+        {formData.image && (
+          <img
+            src = {formData.image}
+            alt="uploaded"
+            className="w-full h-72 object-cover"
+          />
+        )}
+
         {/* This is the section we import from ReactQuill for this we installed a package of reactQuill */}
         <ReactQuill
           theme="snow"
