@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: true,
+      default: "uncategorized"
     },
     content: {
       type: String,

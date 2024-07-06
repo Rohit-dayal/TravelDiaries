@@ -11,8 +11,7 @@ import {
 import { app } from "../firebase.js";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import {useNavigate} from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const [file, setFile] = useState(null);
@@ -63,26 +62,26 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('api/post/create',{
-        method: 'POST',
+      const res = await fetch("api/post/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
       const data = await res.json();
-      if(!res.ok){
+      if (!res.ok) {
         setPublishError(data.message);
         return;
       }
-      if(res.ok){
+      if (res.ok) {
         setPublishError(null);
         navigate(`/post/${data.slug}`);
       }
     } catch (error) {
-      setPublishError('Something went worng');   
+      setPublishError("Something went worng");
     }
-  }
+  };
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
@@ -95,13 +94,13 @@ const CreatePost = () => {
             required
             id="title"
             className="flex-1"
-            onChange={(e) =>  // Event listener
-              setFormData({...formData,title: e.target.value})
-            }
-          ></TextInput>
+            onChange={(
+              e // Event listener
+            ) => setFormData({ ...formData, title: e.target.value })}
+          />
           <Select
-            onChange={(e) => 
-              setFormData({...formData,category: e.target.value})
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
             }
           >
             <option value="uncategorized">Select a category</option>
@@ -139,13 +138,11 @@ const CreatePost = () => {
           </Button>
         </div>
         {imageFileUploadError && (
-          <Alert color='failure'>
-            {imageFileUploadError}
-          </Alert>
+          <Alert color="failure">{imageFileUploadError}</Alert>
         )}
         {formData.image && (
           <img
-            src = {formData.image}
+            src={formData.image}
             alt="uploaded"
             className="w-full h-72 object-cover"
           />
@@ -157,16 +154,21 @@ const CreatePost = () => {
           placeholder="Write something...."
           className="h-72 mb-12"
           required
-          onChange={ // This is the way we take the value from the reactquill(Event Listener)
+          onChange={
+            // This is the way we take the value from the reactquill(Event Listener)
             (value) => {
-              setFormData({...formData,content: value})
+              setFormData({ ...formData, content: value });
             }
           }
         />
         <Button type="submit" gradientDuoTone="purpleToPink">
           Publish
         </Button>
-        { publishError && <Alert className="mt-5" color='failure'>{publishError}</Alert>}
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
       </form>
     </div>
   );

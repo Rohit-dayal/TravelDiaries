@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
+import postRoutes from './routes/post.route.js'
 // We created index.js file because in package.json the main file is mentioned as index.js
 import cookieParser from 'cookie-parser'; // for this we installed a package name npm i cookie-parser
-import postRoutes from './routes/post.route.js'
+
 
 dotenv.config();
 mongoose.connect(
