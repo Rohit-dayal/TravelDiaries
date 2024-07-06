@@ -1,5 +1,6 @@
-import { Button, Table } from "flowbite-react";
+import { Button, Modal, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -7,7 +8,10 @@ export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
-  console.log(userPosts);
+  const [showModal, setShowModal] = useState(false);
+  const [postIdToDelete,setPostIdToDelete] = useState('')
+
+  // console.log(userPosts);
   // we cannot use async with useEffect that's why we made a function inside the useEffect which is asynchronous
   useEffect(() => {
     const fetchPosts = async () => {
@@ -28,20 +32,44 @@ export default function DashPosts() {
       fetchPosts();
     }
   }, [currentUser._id]); // we want this useEffect to run each time a user is changed
-  const handleShowMore = async() =>{
+  const handleShowMore = async () => {
     // when we click on show more whole data till the end index will be available
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
+      const res = await fetch(
+        `/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`
+      );
       const data = await res.json();
-      if(res.ok){
-        setUserPosts((prev) => [...prev,...data.posts]);
-        if(data.posts.length < 9){
+      if (res.ok) {
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if (data.posts.length < 9) {
           setShowMore(false);
         }
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    }
+  };
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(
+        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      const date = await res.json();
+      if(!res.ok){
+        console.log(data.message)
+      }
+      else{
+        setUserPosts((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete) 
+        )
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   }
 
@@ -75,7 +103,7 @@ export default function DashPosts() {
                       <img
                         src={post.image}
                         alt={post.title}
-                        className="w-20 h-10 object-cover bg-gray-500 shadow-md"
+                        className="w-20 h-10 object-cover bg-gray-500"
                       />
                     </Link>
                   </Table.Cell>
@@ -89,7 +117,12 @@ export default function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
-                    <span className="font-medium text-red-500 hover:underline">
+                    <span 
+                    onClick={() => {
+                      setShowModal(true);
+                      setPostIdToDelete(post._id);
+                    }}
+                    className="font-medium text-red-500 hover:underline">
                       Delete
                     </span>
                   </Table.Cell>
@@ -117,6 +150,30 @@ export default function DashPosts() {
       ) : (
         <p>You have no post yet!</p>
       )}
+      <Modal // for delete functionality
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 *:dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-300">
+              Are you sure you want to delete this post?
+            </h3>
+          </div>
+          <div className="flex justify-center gap-6">
+            <Button color="gray" onClick={() => setShowModal(false)}>
+              No, Cancel
+            </Button>
+            <Button color="failure" onClick={handleDeletePost}>
+              Yes, I'm sure
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
