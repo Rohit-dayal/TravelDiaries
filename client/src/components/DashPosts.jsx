@@ -1,4 +1,4 @@
-import { Table } from "flowbite-react";
+import { Button, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
   console.log(userPosts);
   // we cannot use async with useEffect that's why we made a function inside the useEffect which is asynchronous
   useEffect(() => {
@@ -15,6 +16,9 @@ export default function DashPosts() {
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
+          if (data.posts.length < 9) {
+            setShowMore(false);
+          }
         }
       } catch (error) {
         console.log(error.message);
@@ -24,10 +28,29 @@ export default function DashPosts() {
       fetchPosts();
     }
   }, [currentUser._id]); // we want this useEffect to run each time a user is changed
+  const handleShowMore = async() =>{
+    // when we click on show more whole data till the end index will be available
+    const startIndex = userPosts.length;
+    try {
+      const res = await fetch(`/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`);
+      const data = await res.json();
+      if(res.ok){
+        setUserPosts((prev) => [...prev,...data.posts]);
+        if(data.posts.length < 9){
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <div className="table-auto overflow-x-scroll md:mx-auto p3 scrollbar
+    <div
+      className="table-auto overflow-x-scroll md:mx-auto p3 scrollbar
     scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700
-    dark:scrollbar-thumb-slate-500">
+    dark:scrollbar-thumb-slate-500"
+    >
       {currentUser.isAdmin && userPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md">
@@ -57,18 +80,24 @@ export default function DashPosts() {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link className="font-medium text-gray-700 dark:text-white" to={`/post/${post.slug}`}>
+                    <Link
+                      className="font-medium text-gray-700 dark:text-white"
+                      to={`/post/${post.slug}`}
+                    >
                       {post.title}
                     </Link>
                   </Table.Cell>
+                  <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
-                    {post.category}
+                    <span className="font-medium text-red-500 hover:underline">
+                      Delete
+                    </span>
                   </Table.Cell>
                   <Table.Cell>
-                    <span className="font-medium text-red-500 hover:underline">Delete</span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link className="text-teal-500 hover:underline" to={`/update-post/${post._id}`}>
+                    <Link
+                      className="text-teal-500 hover:underline"
+                      to={`/update-post/${post._id}`}
+                    >
                       <span>Edit</span>
                     </Link>
                   </Table.Cell>
@@ -76,6 +105,14 @@ export default function DashPosts() {
               </Table.Body>
             ))}
           </Table>
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className="w-full text-teal-500 self-center text-sm py-7"
+            >
+              Show More
+            </button>
+          )}
         </>
       ) : (
         <p>You have no post yet!</p>
