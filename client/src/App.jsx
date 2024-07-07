@@ -11,6 +11,7 @@ import FooterCom from './components/FooterCom'
 import PrivateRoute from './components/PrivateRoute'
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute'
 import CreatePost from './Pages/Createpost'
+import UpdatePost from './Pages/UpdatePost'
 
 
 
@@ -30,6 +31,7 @@ export default function App() {
         <Route element = {<OnlyAdminPrivateRoute/>}>
           {/* It has the elements which only admin has the access */}
           <Route path='/create-post' element={<CreatePost/>}></Route>
+          <Route path='/update-post/:postId' element={<UpdatePost/>}></Route>
         </Route>
         <Route path='/projects' element={<Projects/>}></Route>
       </Routes>

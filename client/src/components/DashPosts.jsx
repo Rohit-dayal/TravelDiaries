@@ -59,7 +59,7 @@ export default function DashPosts() {
           method: 'DELETE',
         }
       );
-      const date = await res.json();
+      const data = await res.json();
       if(!res.ok){
         console.log(data.message)
       }
