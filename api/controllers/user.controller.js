@@ -80,3 +80,45 @@ export const signout = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getusers = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, "You are not allowed to see all users"));
+  }
+  try {
+    // if start index is mentioned then start from there otherwise start from 0
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    // no of posts in one frame is setted by limit
+    const limit = parseInt(req.query.limit) || 9;
+    const sortDirection = req.query.order === "asc" ? 1 : -1;
+    const user = await User.find()
+      .sort({ updatedAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+    // the above piece of code give us all the information along with the password
+    //so we seperate the password and rest of the information
+    const userWithoutPassword = user.map((user) =>{
+      const {password,...rest} = user._doc;
+      return rest;
+    })
+    const totalUsers = await User.countDocuments();
+    
+    // to get total no. of posts created last month
+    const now = new Date();
+    const oneMonthAgo = new Date(
+        now.getFullYear(),
+        now.getMonth()-1,
+        now.getDate()
+    );
+    const lastMonthUsers = await User.countDocuments({
+        createdAt: {$gte: oneMonthAgo},
+    })
+    res.status(200).json({
+      user: userWithoutPassword,
+      totalUsers,
+      lastMonthUsers
+    })
+  } catch (error) {
+    next(error);
+  }
+};
