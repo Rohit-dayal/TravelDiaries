@@ -81,6 +81,8 @@ export const signout = async (req, res, next) => {
   }
 };
 
+
+// private getusers request can only be made by Admin
 export const getusers = async (req, res, next) => {
   if (!req.user.isAdmin) {
     return next(errorHandler(403, "You are not allowed to see all users"));
@@ -122,3 +124,17 @@ export const getusers = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const getuser = async(req,res,next) =>{
+  try {
+    const user = await User.findById(req.params.userId);
+    if(!user){
+      return next(errorHandler(404,'User not found'))
+    }
+    const {password, ...rest} = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+}
