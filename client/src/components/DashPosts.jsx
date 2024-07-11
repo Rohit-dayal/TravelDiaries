@@ -9,7 +9,7 @@ export default function DashPosts() {
   const [userPosts, setUserPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [postIdToDelete,setPostIdToDelete] = useState('')
+  const [postIdToDelete, setPostIdToDelete] = useState("");
 
   // console.log(userPosts);
   // we cannot use async with useEffect that's why we made a function inside the useEffect which is asynchronous
@@ -56,22 +56,21 @@ export default function DashPosts() {
       const res = await fetch(
         `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
       const data = await res.json();
-      if(!res.ok){
-        console.log(data.message)
-      }
-      else{
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
         setUserPosts((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete) 
-        )
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
       }
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   return (
     <div
@@ -117,12 +116,13 @@ export default function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
-                    <span 
-                    onClick={() => {
-                      setShowModal(true);
-                      setPostIdToDelete(post._id);
-                    }}
-                    className="font-medium text-red-500 hover:underline">
+                    <span
+                      onClick={() => {
+                        setShowModal(true);
+                        setPostIdToDelete(post._id);
+                      }}
+                      className="font-medium text-red-500 hover:underline"
+                    >
                       Delete
                     </span>
                   </Table.Cell>
