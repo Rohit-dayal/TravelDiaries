@@ -11,7 +11,7 @@ export default function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
   const navigate = useNavigate();
 
-//   console.log(comment);
+  //   console.log(comment);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -54,31 +54,41 @@ export default function CommentSection({ postId }) {
     getComments();
   }, [postId]);
   // we have to make the handleLike function here because we need all the the parameter of comment. we pass this as a props to Comment component
-  const handleLike = async(commentId) =>{
+  const handleLike = async (commentId) => {
     try {
-        if(!currentUser){
-            navigate('/sign-in');
-            return;
-        }
-        const res = await fetch(`/api/comment/likeComment/${commentId}`,
-        {
-            method: 'PUT',
-        })
-        if(res.ok){
-            console.log(comments)
-            const data = await res.json();
-            setComments(comments.map((comment) =>
-            comment._id === commentId ? {
-                    ...comment,
-                    likes: data.likes,
-                    numberOfLikes: data.numberOfLikes,
-                } : comment
-            ))
-        }
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+        method: "PUT",
+      });
+      if (res.ok) {
+        console.log(comments);
+        const data = await res.json();
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOfLikes: data.numberOfLikes,
+                }
+              : comment
+          )
+        );
+      }
     } catch (error) {
-        console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
+  const handleEdit = async (comment, editedContent) => {
+    setComments(
+      comments.map((c) =>
+        c._id === comment._id ? { ...c, content: editedContent } : c
+      )
+    );
+  };
 
   return (
     <div className="max-w-2xl mx-auto w-full p-3">
@@ -144,7 +154,12 @@ export default function CommentSection({ postId }) {
           </div>
           {comments.map((comment) => (
             // added a key so that we don't get error
-            <Comment key={comment._id} comment ={comment} onLike={handleLike}/>
+            <Comment
+              key={comment._id}
+              comment={comment}
+              onLike={handleLike}
+              onEdit={handleEdit}
+            />
           ))}
         </>
       )}
