@@ -121,7 +121,7 @@ export default function DashPosts() {
                         setShowModal(true);
                         setPostIdToDelete(post._id);
                       }}
-                      className="font-medium text-red-500 hover:underline"
+                      className="font-medium text-red-500 hover:underline hover:cursor-pointer"
                     >
                       Delete
                     </span>
@@ -159,7 +159,7 @@ export default function DashPosts() {
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 *:dark:text-gray-200 mb-4 mx-auto" />
+            <HiOutlineExclamationCircle className="h-14 w-14 text-red-500 *:dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-300">
               Are you sure you want to delete this post?
             </h3>

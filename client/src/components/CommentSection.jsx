@@ -195,9 +195,9 @@ export default function CommentSection({ postId }) {
         size="md"
       >
         <Modal.Header />
-        <Modal.Body>
+        <Modal.Body className="">
           <div className="text-center">
-            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 *:dark:text-gray-200 mb-4 mx-auto" />
+            <HiOutlineExclamationCircle className="h-14 w-14 text-red-500 *:dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-300">
               Are you sure you want to delete this comment?
             </h3>
