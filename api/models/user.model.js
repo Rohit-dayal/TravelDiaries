@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String,
-        default: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fvectors%2Fblank-profile-picture-mystery-man-973460%2F&psig=AOvVaw237rq09U7Eu614_BJWvxqK&ust=1710161055295000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCNDMlcPc6YQDFQAAAAAdAAAAABAE"
+        default: "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
     },
     isAdmin: { // someone can change from frontend true or false but can't change cookie so we are safe
         type: Boolean,

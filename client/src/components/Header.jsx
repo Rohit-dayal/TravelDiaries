@@ -63,6 +63,7 @@ export default function Header() {
                             alt='user'
                             img={currentUser.profilePicture}
                             rounded
+                            className='border border-gray-300 rounded-full'
                         />}
                     >
                         <Dropdown.Header>
