@@ -28,7 +28,7 @@ export default function Home() {
         </p>
         <Link
           to='/search'
-          className="text-xs sm:text-sm text-cyan-6  00
+          className="text-xs sm:text-sm text-cyan-6 
           font-bold hover:underline"
         >
           View all posts
