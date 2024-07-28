@@ -14,6 +14,7 @@ import CreatePost from './Pages/Createpost'
 import UpdatePost from './Pages/UpdatePost'
 import PostPage from './Pages/PostPage'
 import ScrollToTop from './components/ScrollToTop'
+import Search from './Pages/Search'
 
 
 
@@ -27,6 +28,7 @@ export default function App() {
         <Route path='/about' element={<About/>}></Route>
         <Route path='/sign-in' element={<Signin/>}></Route>
         <Route path='/sign-up' element={<SignUp/>}></Route>
+        <Route path='/search' element={<Search/>}></Route>
         <Route element = {<PrivateRoute/>}>
           {/* To make the dashboard private put it inside the private route so that anyone can access it only when he is logged in */}
           <Route path='/dashboard' element={<Dashboard/>}></Route>
